@@ -1,0 +1,72 @@
+exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s])
+
+Proof:
+--TODO Task 4
+
+Prove p(a) <=> exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s]) by induction on a.
+
+a can be any aritmetic expression (an integer, a variable, or the sum of two arithmetic expressions).
+
+Base Case:
+
+  when the arithmetic expression is in integer form: (where a is any integer)
+
+                  LHS = exec (acomp (N a)) (0,s,[]):
+     [applying acomp] = exec ([LOADI a]) (0,s,[])
+      [applying exec] = (1,s,[a])
+
+                  RHS = (length (acomp (N a)), s, [aval (N a) s]):
+     [applying acomp] = (length ([LOADI a]), s, [aval (N a) s])
+      [applying aval] = (length ([LOADI a]), s, [a])
+    [applying length] = (1,s,[a])
+
+    LHS == RHS: (1,s,[a]) == (1,s,[a])
+
+    therefore when a is an integer arithmetic expression:
+
+    exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s])
+
+  when the arithmetic expression is in variable form: (where a is any variable)
+
+                  LHS = exec (acomp (V a)) (0,s,[]):
+     [applying acomp] = exec ([LOAD a]) (0,s,[])
+      [applying exec] = (1,s,[s ! a])
+
+                  RHS = (length (acomp (V a)), s, [aval (V a) s]):
+     [applying acomp] = (length ([LOAD a]), s, [aval (V a) s])
+      [applying aval] = (length ([LOAD a]), s, [s ! a])
+    [applying length] = (1,s,[s ! a])
+
+    LHS == RHS: (1,s,[s ! a]) == (1,s,[s ! a])
+
+    therefore when a is a variable arithmetic expression:
+
+    exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s])
+
+Inductive Case: 
+
+  when the arithmetic expression is in the form of the sum of two arithmetic expressions: where a is the sum of a1 and a2
+
+  assume p(a): exec (acomp a) (0,s,[]) = (length (acomp a), s, [aval a s])
+
+                               LHS = exec (acomp (Plus a1 a2)) (0,s,[]):
+                  [applying acomp] = exec (acomp a1 ++ acomp a2 ++ [ADD]) (0,s,[])
+    [applying distributivity laws] = exec (acomp a1) (0,s,[]) ++ exec (acomp a2) (0,s,[]) ++ exec [ADD] (0,s,[])
+                      [using p(a)] = (length (acomp a1), s, [aval a1 s]) ++ (length (acomp a2), s, [aval a2 s]) ++ exec [ADD] (0,s,[])
+                   [applying exec] = (length (acomp a1), s, [aval a1 s]) ++ (length (acomp a2), s, [aval a2 s]) ++ (1,s,[])
+                     [applying ++] = (length (acomp a1) + length (acomp a2) + 1, s, [aval a1 s] + [aval a2 s] + [])
+                     [factorising] = (length (acomp a1 ++ acomp a2) + 1, s, [aval a1 s + aval a2 s])
+
+                               RHS = (length (acomp (Plus a1 a2)), s, [aval (Plus a1 a2) s]):
+                  [applying acomp] = (length (acomp a1 ++ acomp a2 ++ [ADD]), s, [aval (Plus a1 a2) s])
+                   [applying aval] = (length (acomp a1 ++ acomp a2 ++ [ADD]), s, [aval a1 s + aval a2 s])
+    [applying distributivity laws] = (length (acomp a1 ++ acomp a2) + length [ADD]), s, [aval a1 s + aval a2 s])
+        [applying length of [ADD]] = (length (acomp a1 ++ acomp a2) + 1, s, [aval a1 s + aval a2 s])
+
+    LHS == RHS: (length (acomp a1 ++ acomp a2) + 1, s, [aval a1 s + aval a2 s])
+
+    therefore when a is in the form of the sum of two arithmetic expressions a1 and a2:
+
+    exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s])
+
+This proves that for every value of a: exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s])
