@@ -1,4 +1,4 @@
-# Haskell Compiler
+# Haskell Compiler Coursework
 
 Consists of three folders:
 - *src* contains the three main modules: Compiler.hs, Interpreter.hs, and StackMachine.hs.
